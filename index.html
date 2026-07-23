@@ -112,8 +112,8 @@
   <form class="cbar" id="f"><input id="ci" autocomplete="off" placeholder="Type your message..."><button id="sb" type="submit">Send</button></form>
 </div>
 <script>
- // >>> After deploying the backend on Render, put its URL here (keep the /chat): <<<
- const BACKEND_URL = "https://YOUR-BACKEND.onrender.com/chat";
+ // On Vercel the chat function lives at /api/chat on the same domain (no CORS needed).
+ const BACKEND_URL = "/api/chat";
 
  const log=document.getElementById('log'),f=document.getElementById('f'),ci=document.getElementById('ci');
  const panel=document.getElementById('chat-panel');
