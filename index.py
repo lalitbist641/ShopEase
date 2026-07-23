@@ -54,7 +54,12 @@ def generate_reply(message):
         req = urllib.request.Request(
             LLM_API_URL, data=body,
             headers={"Content-Type": "application/json",
-                     "Authorization": f"Bearer {OPENAI_KEY}"})
+                     "Authorization": f"Bearer {OPENAI_KEY}",
+                     # Cloudflare (in front of Groq) blocks the default
+                     # "Python-urllib" user-agent with error 1010; use a browser UA.
+                     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                                   "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                   "Chrome/120.0.0.0 Safari/537.36"})
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.load(r)["choices"][0]["message"]["content"].strip()
     except urllib.error.HTTPError as he:
