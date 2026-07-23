@@ -15,6 +15,9 @@ import os
 import urllib.request
 from http.server import BaseHTTPRequestHandler
 
+# Works with any OpenAI-compatible provider (OpenAI, Groq, OpenRouter, Together, ...).
+# For FREE Groq: set LLM_API_URL, OPENAI_MODEL and OPENAI_API_KEY (a gsk_... key).
+LLM_API_URL = os.environ.get("LLM_API_URL", "https://api.openai.com/v1/chat/completions")
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-4o-mini")
 OPENAI_KEY = os.environ.get("OPENAI_API_KEY", "")
 COMPANY = "ShopEase"
@@ -48,7 +51,7 @@ def generate_reply(message):
         body = json.dumps({"model": OPENAI_MODEL, "messages": messages,
                            "temperature": 0.4}).encode()
         req = urllib.request.Request(
-            "https://api.openai.com/v1/chat/completions", data=body,
+            LLM_API_URL, data=body,
             headers={"Content-Type": "application/json",
                      "Authorization": f"Bearer {OPENAI_KEY}"})
         with urllib.request.urlopen(req, timeout=30) as r:
