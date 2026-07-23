@@ -13,6 +13,7 @@ Standard library only — no requirements.txt needed.
 import json
 import os
 import urllib.request
+import urllib.error
 from http.server import BaseHTTPRequestHandler
 
 # Works with any OpenAI-compatible provider (OpenAI, Groq, OpenRouter, Together, ...).
@@ -56,6 +57,12 @@ def generate_reply(message):
                      "Authorization": f"Bearer {OPENAI_KEY}"})
         with urllib.request.urlopen(req, timeout=30) as r:
             return json.load(r)["choices"][0]["message"]["content"].strip()
+    except urllib.error.HTTPError as he:
+        try:
+            detail = he.read().decode("utf-8", "ignore")[:400]
+        except Exception:
+            detail = ""
+        return f"[LLM error {he.code}] {detail}"
     except Exception as e:
         return f"Sorry, I'm having trouble right now. ({e})"
 
